@@ -22,6 +22,8 @@ def obtener_plan_marketing(detalles_negocio):
     - **Presupuesto:** {detalles_negocio['presupuesto']}
     - **Canales de marketing preferidos:** {detalles_negocio['canales']}
     - **Problema que afronta actualmente tu negocio:** {detalles_negocio['problema']}
+    
+    Además, proporciona una idea novedosa y original que pueda diferenciar a este negocio en su industria y captar la atención de su audiencia objetivo.
     """
     
     payload = {
