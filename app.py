@@ -1,8 +1,8 @@
 import streamlit as st
 import requests
 import json
-import os
 
+# Función para obtener el plan de marketing
 def obtener_plan_marketing(detalles_negocio):
     url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
@@ -15,7 +15,13 @@ def obtener_plan_marketing(detalles_negocio):
     Eres un estratega de marketing reconocido con más de dos décadas de experiencia en la creación de planes de marketing exitosos...
     
     Proporcione las características específicas del negocio para completar los detalles y generar un plan de marketing personalizado:
-    {detalles_negocio}
+    
+    - **Negocio:** {detalles_negocio['negocio']}
+    - **Industria:** {detalles_negocio['industria']}
+    - **Audiencia objetivo:** {detalles_negocio['audiencia']}
+    - **Presupuesto:** {detalles_negocio['presupuesto']}
+    - **Canales de marketing preferidos:** {detalles_negocio['canales']}
+    - **Problema que afronta actualmente tu negocio:** {detalles_negocio['problema']}
     """
     
     payload = {
@@ -34,19 +40,33 @@ def obtener_plan_marketing(detalles_negocio):
     else:
         return f"Error: {response.text}"
 
+# Interfaz de usuario con Streamlit
 st.title("Generador de Plan de Marketing")
 
-st.write("Ingresa las características de tu negocio para generar un plan de marketing personalizado.")
+st.write("Ingresa los detalles de tu negocio para generar un plan de marketing personalizado.")
 
-detalles_negocio = st.text_area("Describe tu negocio, industria, audiencia objetivo, presupuesto, canales de marketing preferidos, etc.")
+negocio = st.text_input("Describe tu negocio")
+industria = st.text_input("Industria")
+audiencia = st.text_input("Audiencia objetivo")
+presupuesto = st.text_input("Presupuesto disponible")
+canales = st.text_input("Canales de marketing preferidos")
+problema = st.text_area("¿Qué problema afronta actualmente tu negocio?")
 
 if st.button("Generar Plan de Marketing"):
-    if detalles_negocio.strip():
+    if negocio.strip() and industria.strip() and audiencia.strip() and presupuesto.strip() and canales.strip() and problema.strip():
         with st.spinner("Generando el plan de marketing..."):
+            detalles_negocio = {
+                "negocio": negocio,
+                "industria": industria,
+                "audiencia": audiencia,
+                "presupuesto": presupuesto,
+                "canales": canales,
+                "problema": problema
+            }
             plan_marketing = obtener_plan_marketing(detalles_negocio)
             st.subheader("Plan de Marketing Generado:")
             st.write(plan_marketing)
     else:
-        st.warning("Por favor, proporciona detalles sobre tu negocio.")
+        st.warning("Por favor, completa todos los campos.")
 
 st.markdown("[Corrección de textos en 24 horas](https://hablemosbien.org)")
