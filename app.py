@@ -2,8 +2,8 @@ import streamlit as st
 import requests
 import json
 
-# Función para obtener el plan de marketing
-def obtener_plan_marketing(detalles_negocio):
+# Función para obtener tres ideas innovadoras y sus planes de implementación
+def obtener_ideas_innovadoras(detalles_negocio):
     url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
         "Content-Type": "application/json",
@@ -11,10 +11,8 @@ def obtener_plan_marketing(detalles_negocio):
     }
     
     prompt = f"""
-    C. Contexto:
-    Eres un estratega de marketing reconocido con más de dos décadas de experiencia en la creación de planes de marketing exitosos...
-    
-    Proporcione las características específicas del negocio para completar los detalles y generar un plan de marketing personalizado:
+    Eres un estratega de negocios creativo con experiencia en resolver problemas empresariales complejos. 
+    Proporciona TRES ideas ORIGINALES y NOVEDOSAS para resolver el siguiente problema:
     
     - **Negocio:** {detalles_negocio['negocio']}
     - **Industria:** {detalles_negocio['industria']}
@@ -23,13 +21,19 @@ def obtener_plan_marketing(detalles_negocio):
     - **Canales de marketing preferidos:** {detalles_negocio['canales']}
     - **Problema que afronta actualmente tu negocio:** {detalles_negocio['problema']}
     
-    Además, proporciona una idea novedosa y original que pueda diferenciar a este negocio en su industria y captar la atención de su audiencia objetivo.
+    Para CADA idea, proporciona:
+    1. Una descripción clara y detallada de la solución.
+    2. Un plan paso a paso para implementarla.
+    3. Los recursos necesarios (tiempo, dinero, personal, etc.).
+    4. Los posibles resultados esperados.
+    
+    Asegúrate de que las ideas sean creativas, viables y alineadas con el presupuesto y los canales disponibles.
     """
     
     payload = {
         "messages": [{"role": "user", "content": prompt}],
         "model": "deepseek-r1-distill-llama-70b",
-        "temperature": 0.6,
+        "temperature": 0.8,  # Un poco más creativo
         "max_completion_tokens": 4096,
         "top_p": 0.95,
         "stream": False
@@ -43,20 +47,20 @@ def obtener_plan_marketing(detalles_negocio):
         return f"Error: {response.text}"
 
 # Interfaz de usuario con Streamlit
-st.title("Generador de Plan de Marketing")
+st.title("Generador de Ideas Innovadoras")
+st.write("Ingresa los detalles de tu negocio para recibir tres ideas originales y novedosas para resolver su problema.")
 
-st.write("Ingresa los detalles de tu negocio para generar un plan de marketing personalizado.")
+with st.expander("Detalles del Negocio"):
+    negocio = st.text_input("Describe tu negocio")
+    industria = st.text_input("Industria")
+    audiencia = st.text_input("Audiencia objetivo")
+    presupuesto = st.text_input("Presupuesto disponible")
+    canales = st.text_input("Canales de marketing preferidos (separados por comas)")
+    problema = st.text_area("¿Qué problema afronta actualmente tu negocio?")
 
-negocio = st.text_input("Describe tu negocio")
-industria = st.text_input("Industria")
-audiencia = st.text_input("Audiencia objetivo")
-presupuesto = st.text_input("Presupuesto disponible")
-canales = st.text_input("Canales de marketing preferidos")
-problema = st.text_area("¿Qué problema afronta actualmente tu negocio?")
-
-if st.button("Generar Plan de Marketing"):
+if st.button("Generar Ideas Innovadoras"):
     if negocio.strip() and industria.strip() and audiencia.strip() and presupuesto.strip() and canales.strip() and problema.strip():
-        with st.spinner("Generando el plan de marketing..."):
+        with st.spinner("Generando ideas innovadoras..."):
             detalles_negocio = {
                 "negocio": negocio,
                 "industria": industria,
@@ -65,10 +69,9 @@ if st.button("Generar Plan de Marketing"):
                 "canales": canales,
                 "problema": problema
             }
-            plan_marketing = obtener_plan_marketing(detalles_negocio)
-            st.subheader("Plan de Marketing Generado:")
-            st.write(plan_marketing)
+            ideas_innovadoras = obtener_ideas_innovadoras(detalles_negocio)
+            
+            st.subheader("Ideas Innovadoras Generadas:")
+            st.markdown(ideas_innovadoras, unsafe_allow_html=True)  # Permite formato HTML si es necesario
     else:
         st.warning("Por favor, completa todos los campos.")
-
-st.markdown("[Corrección de textos en 24 horas](https://hablemosbien.org)")
