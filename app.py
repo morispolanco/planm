@@ -75,3 +75,32 @@ if st.button("Generar Ideas Innovadoras"):
             st.markdown(ideas_innovadoras, unsafe_allow_html=True)  # Permite formato HTML si es necesario
     else:
         st.warning("Por favor, completa todos los campos.")
+
+# Agregar footer
+footer = """
+<style>
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+}
+.footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
+</style>
+<div class="footer">
+    <p>Corrección de textos en 24 horas: <a href="https://hablemosbien.org" target="_blank">https://hablemosbien.org</a></p>
+</div>
+"""
+
+st.markdown(footer, unsafe_allow_html=True)
